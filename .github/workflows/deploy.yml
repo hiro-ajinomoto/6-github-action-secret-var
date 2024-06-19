@@ -4,9 +4,16 @@ on:
     branches:
       - main
       - dev
+env:
+  MONGO_DB_NAME: gha-demo # workflow level
 jobs:
   test:
-    environment: testing
+    env:
+      MONGODB_CLUSTER_ADDRESS: cluster0.jdhbv0m.mongodb.net
+      MONGODB_USERNAME: adam
+      MONGODB_PASSWORD: root
+      PORT: 8080
+
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
@@ -23,11 +30,14 @@ jobs:
       - name: Run tests
         run: npm test
       - name: Output information
-        run: echo "..."
+        run: |
+          echo  "MONGODB_USERNAME-${{ env.MONGODB_USERNAME }}"
+          echo  "MONGO_DB_NAME $MONGO_DB_NAME"
+
   deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Output information
-        run: |        
+        run: |
           echo "..."
